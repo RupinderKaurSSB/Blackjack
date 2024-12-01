@@ -4,14 +4,17 @@ import no.blackjack.model.Card;
 import no.blackjack.model.Deck;
 import no.blackjack.model.Player;
 
+import java.util.logging.Logger;
+
 public class BlackjackGame {
+    Logger logger = Logger.getLogger(getClass().getName());
     private final Deck deck;
-    private final Player you;
+    private final Player dealer;
     private final Player magnus;
 
     public BlackjackGame() {
         deck = new Deck();
-        you = new Player("You");
+        dealer = new Player("Dealer");
         magnus = new Player("Magnus");
     }
 
@@ -24,31 +27,31 @@ public class BlackjackGame {
             return;
         }
 
-        // Your turn
-        playerTurn(you, 17);
+        // Dealer's turn
+        playerTurn(dealer, 17);
 
         // Magnus's turn
-        if (!you.isBust()) {
-            playerTurn(magnus, you.getPoints());
+        if (!dealer.isBust()) {
+            playerTurn(magnus, dealer.getPoints());
         }
 
         determineWinner();
     }
 
     private void dealInitialCards() {
-        you.addCard(deck.drawCard());
-        you.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
         magnus.addCard(deck.drawCard());
         magnus.addCard(deck.drawCard());
 
-        System.out.println("Initial hands:");
-        printPlayerStatus(you);
+        logger.info("Initial hands:");
+        printPlayerStatus(dealer);
         printPlayerStatus(magnus);
     }
 
     private boolean checkBlackjack() {
-        if (you.getPoints() == 21 || magnus.getPoints() == 21) {
-            System.out.println("\nBlackjack!");
+        if (dealer.getPoints() == 21 || magnus.getPoints() == 21) {
+            logger.info("\nBlackjack!");
             determineWinner();
             return true;
         }
@@ -56,7 +59,7 @@ public class BlackjackGame {
     }
 
     private void playerTurn(Player player, int targetPoints) {
-        System.out.println("\n" + player.getName() + "'s turn:");
+        logger.info("\n" + player.getName() + "'s turn:");
         while (player.getPoints() < targetPoints && !player.isBust()) {
             Card card = deck.drawCard();
             player.addCard(card);
@@ -65,25 +68,25 @@ public class BlackjackGame {
     }
 
     private void determineWinner() {
-        System.out.println("\nGame Over!");
-        printPlayerStatus(you);
+        logger.info("\nGame Over!");
+        printPlayerStatus(dealer);
         printPlayerStatus(magnus);
 
-        if (you.isBust()) {
-            System.out.println("Magnus wins! You went bust!");
+        if (dealer.isBust()) {
+            logger.info("Magnus wins! Dealer went bust!");
         } else if (magnus.isBust()) {
-            System.out.println("You win! Magnus went bust!");
-        } else if (you.getPoints() > magnus.getPoints()) {
-            System.out.println("You win!");
-        } else if (magnus.getPoints() > you.getPoints()) {
-            System.out.println("Magnus wins!");
+            logger.info("Dealer wins! Magnus went bust!");
+        } else if (dealer.getPoints() > magnus.getPoints()) {
+            logger.info("Dealer wins!");
+        } else if (magnus.getPoints() > dealer.getPoints()) {
+            logger.info("Magnus wins!");
         } else {
-            System.out.println("It's a tie!");
+            logger.info("It's a tie!");
         }
     }
 
     private void printPlayerStatus(Player player) {
-        System.out.println(player.getName() + ": points=" + player.getPoints() +
-                         ", cards=" + player.getHand());
+        logger.info(player.getName() + "| " + player.getPoints() +
+                         " | " + player.getHand());
     }
 }

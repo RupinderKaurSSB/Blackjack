@@ -1,48 +1,66 @@
 package no.blackjack.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Card {
-    private String suit;
-    private String value;
+    private final Suit suit;
+    private final Rank rank;
 
-    // Default constructor for Jackson
-    public Card() {
+    @JsonCreator
+    public Card(
+        @JsonProperty("suit") String suitStr,
+        @JsonProperty("value") String rankStr
+    ) {
+        this.suit = parseSuit(suitStr);
+        this.rank = parseRank(rankStr);
     }
 
-    // Constructor with parameters
-    public Card(String suit, String value) {
-        this.suit = suit;
-        this.value = value;
+    private Suit parseSuit(String suitStr) {
+        return switch (suitStr) {
+            case "HEARTS" -> Suit.HEARTS;
+            case "DIAMONDS" -> Suit.DIAMONDS;
+            case "SPADES" -> Suit.SPADES;
+            case "CLUBS" -> Suit.CLUBS;
+            default -> throw new IllegalArgumentException("Unknown suit: " + suitStr);
+        };
     }
 
-    // Getters and setters
-    public String getSuit() {
+    private Rank parseRank(String rankStr) {
+        return switch (rankStr) {
+            case "A" -> Rank.ACE;
+            case "2" -> Rank.TWO;
+            case "3" -> Rank.THREE;
+            case "4" -> Rank.FOUR;
+            case "5" -> Rank.FIVE;
+            case "6" -> Rank.SIX;
+            case "7" -> Rank.SEVEN;
+            case "8" -> Rank.EIGHT;
+            case "9" -> Rank.NINE;
+            case "10" -> Rank.TEN;
+            case "J" -> Rank.JACK;
+            case "Q" -> Rank.QUEEN;
+            case "K" -> Rank.KING;
+            default -> throw new IllegalArgumentException("Unknown rank: " + rankStr);
+        };
+    }
+
+    public Suit getSuit() {
         return suit;
     }
 
-    public void setSuit(String suit) {
-        this.suit = suit;
+    public Rank getRank() {
+        return rank;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public int getPoints() {
-        switch (value) {
-            case "A": return 11;
-            case "K":
-            case "Q":
-            case "J": return 10;
-            default: return Integer.parseInt(value);
-        }
+    public int getValue() {
+        return rank.getValue();
     }
 
     @Override
     public String toString() {
-        return suit + value;
+        return suit.getShortName() + rank.toString();
     }
 }
