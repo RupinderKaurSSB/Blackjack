@@ -18,6 +18,11 @@ public class Card {
         this.rank = parseRank(rankStr);
     }
 
+    public Card(Suit suit, Rank rank) {
+        this.suit = suit;
+        this.rank = rank;
+    }
+
     private Suit parseSuit(String suitStr) {
         return switch (suitStr) {
             case "HEARTS" -> Suit.HEARTS;
