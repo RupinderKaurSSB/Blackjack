@@ -1,5 +1,6 @@
-package com.blackjack.blackjack;
+package no.blackjack;
 
+import no.blackjack.service.BlackjackGame;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

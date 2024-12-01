@@ -1,4 +1,8 @@
-package com.blackjack.blackjack;
+package no.blackjack.service;
+
+import no.blackjack.model.Card;
+import no.blackjack.model.Deck;
+import no.blackjack.model.Player;
 
 public class BlackjackGame {
     private final Deck deck;
