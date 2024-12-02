@@ -6,13 +6,22 @@ import no.blackjack.model.Player;
 
 import java.util.logging.Logger;
 
+/*
+ * This class represents a Blackjack game.
+ */
 public class BlackjackGame {
     Logger logger = Logger.getLogger(getClass().getName());
 
     private static final int BLACKJACK_VALUE = 21;
     private static final int DEALER_MIN_POINTS = 17;
 
+    /*
+     * The deck of cards used in the game.
+     */
     private final Deck deck;
+    /*
+     * The players in the game.
+     */
     private final Player dealer;
     private final Player player;
 
@@ -22,6 +31,10 @@ public class BlackjackGame {
         player = new Player(playerName);
     }
 
+    /**
+     * Plays the game.
+     * @return GameResult object containing the result of the game.
+     */
     public GameResult play() {
         dealInitialCards();
 
@@ -38,6 +51,9 @@ public class BlackjackGame {
         return determineWinner();
     }
 
+    /**
+     * Deals the initial cards to the players.
+     */
     private void dealInitialCards() {
         dealer.addCard(deck.drawCard());
         dealer.addCard(deck.drawCard());

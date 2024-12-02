@@ -2,6 +2,9 @@ package no.blackjack.service;
 
 import no.blackjack.model.Player;
 
+/**
+ * Represents the result of a game.
+ */
 public class GameResult {
     private final Player winner;
     private final String message;
