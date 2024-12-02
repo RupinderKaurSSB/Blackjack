@@ -51,7 +51,7 @@ The project uses GitHub Actions for:
 ### Docker images are available at: 
 
 ```bash
-docker pull <your-dockerhub-username>/blackjack:latest
+docker pull rpkr/blackjack:latest
 ```
 
 
