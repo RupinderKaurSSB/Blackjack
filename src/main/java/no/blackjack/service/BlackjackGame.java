@@ -8,6 +8,10 @@ import java.util.logging.Logger;
 
 public class BlackjackGame {
     Logger logger = Logger.getLogger(getClass().getName());
+
+    private static final int BLACKJACK_VALUE = 21;
+    private static final int DEALER_MIN_POINTS = 17;
+
     private final Deck deck;
     private final Player dealer;
     private final Player player;
@@ -18,24 +22,20 @@ public class BlackjackGame {
         player = new Player(playerName);
     }
 
-    public void play() {
-        // Initial deal
+    public GameResult play() {
         dealInitialCards();
 
-        // Check for initial blackjack
         if (checkBlackjack()) {
-            return;
+            return determineWinner();
         }
 
-        // Dealer's turn
-        playerTurn(dealer, 17);
+        playerTurn(dealer, DEALER_MIN_POINTS);
 
-        // Player's turn
         if (!dealer.isBust()) {
             playerTurn(player, dealer.getPoints());
         }
 
-        determineWinner();
+        return determineWinner();
     }
 
     private void dealInitialCards() {
@@ -50,7 +50,7 @@ public class BlackjackGame {
     }
 
     private boolean checkBlackjack() {
-        if (dealer.getPoints() == 21 || player.getPoints() == 21) {
+        if (dealer.getPoints() == BLACKJACK_VALUE || player.getPoints() == BLACKJACK_VALUE) {
             logger.info("\nBlackjack!");
             determineWinner();
             return true;
@@ -67,22 +67,26 @@ public class BlackjackGame {
         }
     }
 
-    private void determineWinner() {
+    private GameResult determineWinner() {
         logger.info("\nGame Over!");
         printPlayerStatus(dealer);
         printPlayerStatus(player);
 
+        GameResult result;
         if (dealer.isBust()) {
-            logger.info(player.getName() + " wins! Dealer went bust!");
+            result = new GameResult(player, player.getName() + " wins! Dealer went bust!", player.getPoints());
         } else if (player.isBust()) {
-            logger.info("Dealer wins! " + player.getName() + " went bust!");
+            result = new GameResult(dealer, "Dealer wins! " + player.getName() + " went bust!", dealer.getPoints());
         } else if (dealer.getPoints() > player.getPoints()) {
-            logger.info("Dealer wins!");
+            result = new GameResult(dealer, "Dealer wins!", dealer.getPoints());
         } else if (player.getPoints() > dealer.getPoints()) {
-            logger.info(player.getName() + " wins!");
+            result = new GameResult(player, player.getName() + " wins!", player.getPoints());
         } else {
-            logger.info("It's a tie!");
+            result = new GameResult(null, "It's a tie!", dealer.getPoints());
         }
+
+        logger.info(result.getMessage());
+        return result;
     }
 
     private void printPlayerStatus(Player currentPlayer) {
