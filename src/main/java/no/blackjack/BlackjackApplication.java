@@ -11,7 +11,8 @@ public class BlackjackApplication {
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(BlackjackApplication.class, args);
 
-		BlackjackGame game = new BlackjackGame();
+		BlackjackGame game = new BlackjackGame("John");
 		game.play();
+
 	}
 }
