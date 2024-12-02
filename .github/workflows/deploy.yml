@@ -3,6 +3,11 @@ name: Deploy Blackjack Game
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'README.txt'
+      - 'README'
+      - 'docs/**'
   pull_request:
     branches: [ main ]
 
