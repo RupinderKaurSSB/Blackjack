@@ -28,20 +28,29 @@ public class Player {
         int points = 0;
         int aces = 0;
 
-        for (Card card : hand) {
-            if (card.getValue() == Rank.ACE.getValue()) {
-                aces++;
-            }
-            points += card.getValue();
-        }
+        points = hand.stream()
+                .mapToInt(Card::getValue)
+                .sum();
 
-        while (points > 21 && aces > 0) {
+        aces = (int) hand.stream()
+                .filter(card -> card.getValue() == Rank.ACE.getValue())
+                .count();
+
+        /*while (points > 21 && aces > 0) {
             points -= 10;
             aces--;
-        }
+        }*/
 
         return points;
     }
+
+    /*public int getPoints() {
+        int points = 0;
+        for (Card card : hand) {
+            points += card.getValue();
+        }
+        return points;
+    }*/
 
     public boolean isBust() {
         return getPoints() > 21;
