@@ -88,21 +88,42 @@ public class BlackjackGame {
         printPlayerStatus(dealer);
         printPlayerStatus(player);
 
-        GameResult result;
-        if (dealer.isBust()) {
-            result = new GameResult(player, player.getName() + " wins! Dealer went bust!", player.getPoints());
-        } else if (player.isBust()) {
-            result = new GameResult(dealer, "Dealer wins! " + player.getName() + " went bust!", dealer.getPoints());
-        } else if (dealer.getPoints() > player.getPoints()) {
-            result = new GameResult(dealer, "Dealer wins!", dealer.getPoints());
-        } else if (player.getPoints() > dealer.getPoints()) {
-            result = new GameResult(player, player.getName() + " wins!", player.getPoints());
-        } else {
-            result = new GameResult(null, "It's a tie!", dealer.getPoints());
-        }
+        GameResult result = evaluateGameOutcome();
 
         logger.info(result.getMessage());
         return result;
+    }
+
+    private GameResult evaluateGameOutcome() {
+        if (dealer.isBust()) {
+            return createPlayerWinResult("Dealer went bust!");
+        }
+
+        if (player.isBust()) {
+            return createDealerWinResult("Player went bust!");
+        }
+
+        return comparePlayerPoints();
+    }
+
+    private GameResult comparePlayerPoints() {
+        if (dealer.getPoints() > player.getPoints()) {
+            return new GameResult(dealer, "Dealer wins!", dealer.getPoints());
+        }
+
+        if (player.getPoints() > dealer.getPoints()) {
+            return createPlayerWinResult("wins!");
+        }
+
+        return new GameResult(null, "It's a tie!", dealer.getPoints());
+    }
+
+    private GameResult createPlayerWinResult(String message) {
+        return new GameResult(player, player.getName() + " " + message, player.getPoints());
+    }
+
+    private GameResult createDealerWinResult(String message) {
+        return new GameResult(dealer, "Dealer wins! " + player.getName() + " " + message, dealer.getPoints());
     }
 
     private void printPlayerStatus(Player currentPlayer) {
